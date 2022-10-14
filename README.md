@@ -17,10 +17,13 @@ Select the tool in the "More Tools" menu (**>>**)
 3. Core Area <br> <img align='left' src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis_v2/blob/main/Image/Tool_Icons/3.png" height='40'/> Apply the segmentation algorithm to delineate core contourn (right click for open a dialog box to choose one algorithm and change parameters). <br><br><hr>
 4. Skeletonize <br> <img align='left' src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis_v2/blob/main/Image/Tool_Icons/4.png" height='40'/> Skeletonize from a binary ROI (Requires having the ROI of the total area in the last position in the ROI manager). <br><br><hr>
 
-## Example
-To try this macro, you can find samples __[here](https://github.com/Guyon-J/Macro_for_Spheroid_Analysis/tree/main/Images/Spheroid_Samples)__.
+## Algorythm
+<br> <img src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis_v2/blob/main/Image/algorythm.png" height='300'/><br>
+A. Step-by-step presentation of the segmentation: (i) Raw image ; (ii) Image obtained from the subtraction of the filtered image by the image with a mask ; (iii) Contour of the image with Sobel filter ; (iv) Delineation of the different zones of the spheroid. B. Examples of segmentation with basic parameters. Scale = 50 μm.
 
-<br> <img src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis/blob/main/Images/Spheroid_ROI/Presentation.png" height='300'/><br>
+Joris Guyon. Nouveaux mécanismes du développement des tumeurs cérébrales. Biologie cellulaire. Université de Bordeaux, 2021. Français. NNT : 2021BORD0344 . tel-03576571
+
+To try this macro, you can find samples __[here](https://github.com/Guyon-J/Macro_for_Spheroid_Analysis/tree/main/Images/Spheroid_Samples)__.
 <br>
 
 ## How to Cite
