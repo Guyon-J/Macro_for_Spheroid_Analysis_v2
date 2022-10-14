@@ -30,7 +30,6 @@ To try this macro, you can find samples __[here](https://github.com/Guyon-J/Macr
 
 
 ## How to Cite
-<br> [<img align='right' src="https:" height='75'/>](https://)
 <div itemscope itemtype="https://schema.org/Person"><a itemprop="sameAs" content="https://orcid.org/0000-0001-6692-2890" href="https://orcid.org/0000-0001-6692-2890" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">Guyon, J.</a>, Røsland, G. V., Bikfalvi, A., and <itemscope itemtype="https://schema.org/Person"><a itemprop="sameAs" content="https://orcid.org/0000-0002-0319-7617" href="https://orcid.org/0000-0002-0319-7617" target="orcid.widget" rel="me noopener noreferrer" style="vertical-align:top;"><img src="https://orcid.org/sites/default/files/images/orcid_16x16.png" style="width:1em;margin-right:.5em;" alt="ORCID iD icon">Daubon, T.</a> 
 
 Title. Journal, XXX, [DOI](https://) (2022). 
