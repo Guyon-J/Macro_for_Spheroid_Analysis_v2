@@ -20,13 +20,14 @@ Select the tool in the "More Tools" menu (**>>**)
 ## Algorythm
 <br> <img src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis_v2/blob/main/Image/algorythm.png" height='500'/><br>
 A. Step-by-step presentation of the segmentation: (i) Raw image ; (ii) Image obtained from the subtraction of the filtered image by the image with a mask ; (iii) Contour of the image with Sobel filter ; (iv) Delineation of the different zones of the spheroid. B. Examples of segmentation with basic parameters. Scale = 50 μm.
-
 <br>
+
 Source:<i> Joris Guyon. Nouveaux mécanismes du développement des tumeurs cérébrales. Biologie cellulaire. Université de Bordeaux, 2021. Français. NNT : 2021BORD0344 . tel-03576571 </i>
 <br>
 <br>
+
 To try this macro, you can find samples __[here](https://github.com/Guyon-J/Macro_for_Spheroid_Analysis/tree/main/Images/Spheroid_Samples)__.
-<br>
+
 
 ## How to Cite
 <br> [<img align='right' src="https:" height='75'/>](https://)
