@@ -12,7 +12,7 @@ Select the tool in the "More Tools" menu (**>>**)
 
 
 ## Tool icons
-1. HELP <br> <img align='left' src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis/blob/main/Images/SPH.png" height='40'/> Allows simultaneous analysis of multiple spheroid images. It is possible to choose the area to quantify in the dialog box. Combination of the two following tool. <br><br><hr>
+1. HELP <br> <img align='left' src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis_v2/blob/main/Image/Tool_Icons/1.png" height='40'/> Allows simultaneous analysis of multiple spheroid images. It is possible to choose the area to quantify in the dialog box. Combination of the two following tool. <br><br><hr>
 2. Image Segmentation <br> <img align='left' src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis/blob/main/Images/TOTAL.png" height='40'/> Apply the choosen segmentation algorithm to delineate contourn (right click for open a dialog box to choose one algorithm and change parameters). <br><br><hr>
 3. Core Area <br> <img align='left' src="https://github.com/Guyon-J/Macro_for_Spheroid_Analysis/blob/main/Images/CORE.png" height='40'/> Apply the segmentation algorithm to delineate core contourn (right click for open a dialog box to choose one algorithm and change parameters). <br><br><hr>
 4. Skeletonize <br> Skeletonize from a binary ROI (Requires having the ROI of the total area in the last position in the ROI manager). <br><br><hr>
