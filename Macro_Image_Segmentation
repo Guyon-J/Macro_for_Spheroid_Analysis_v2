@@ -1,0 +1,384 @@
+//** Created by Guyon Joris, INSERM u1029,
+//   Bordeaux University, Pessac, Gironde, September 22, 2021
+// 
+// This macro was created to faciliate the segmentation of an object from different acquisitions in Fiji.
+
+
+/*
+version 1.0, September 22, 2021
+*/
+
+// ______________________________________________________________________________________________________________________
+// ----------------------------------------------------------------------------------------------------------------------
+// Variable declaration
+// ______________________________________________________________________________________________________________________
+// ----------------------------------------------------------------------------------------------------------------------
+
+var unsharp_radius = 1;
+var unsharp_weight = 0.6;
+var med_filter_radius = 0;
+var sift_weight = 25;
+var minimum_radius = 5;
+var maximum_radius = 5;
+var med_filter_radius2 = 20;
+var sift_weight2 = 5000;
+var invert_selection = false;
+var name;
+var setup_radius1 = 20;
+var	setup_radius2 = 500;
+var	setup_space = 20;
+var scale;
+var Add_QImage = "No";
+var Method_Choice0 = "Classic   ";
+var Method_Choice = "1     ";
+
+var URL = "https://github.com/Guyon-J/Cancer_Feature_Analysis/wiki/Welcome-to-the-Cancer-Feature-Analysis-wiki!";
+var URL_Witcher = "https://raw.githubusercontent.com/Guyon-J/Image_segmentation/main/Images/Tool_icons/Witcher.png";
+var URL_Core = "https://upload.wikimedia.org/wikipedia/commons/7/74/Cercle_dessin_indus.png";
+var URL_Sk = "https://raw.githubusercontent.com/Guyon-J/Image_segmentation/main/Images/Tool_icons/Sk.png";
+
+
+
+// ______________________________________________________________________________________________________________________
+// ----------------------------------------------------------------------------------------------------------------------
+// Action Tools and options
+// ______________________________________________________________________________________________________________________
+// ----------------------------------------------------------------------------------------------------------------------
+
+// -----------------------------------------------------
+// HELP button Tool
+// -----------------------------------------------------
+
+macro "HELP Action Tool - Cf00D15D16D17D18D19D27D35D36D37D38D39D55D56D57D58D59D65D67D69D75D79D95D96D97D98D99Da9Dc5Dc6Dc7Dc8Dc9Dd5Dd7De5De6De7CbffD00D01D0cD23D4dD4fD5fD63D7bD82D9bDacDc2Dd0DefDf3DfdDffCff8D0bD1bD1dD1fD20D32D33D3cD4bD51D53D7eD8cD8dD90D9cD9fDbdDcdDcfDe2DecDfbCfffD04D05D06D07D08D09D0aD14D1aD24D25D26D28D29D2aD34D3aD44D45D46D47D48D49D4aD54D5aD64D66D68D6aD74D76D77D78D7aD84D85D86D87D88D89D8aD94D9aDa4Da5Da6Da7Da8DaaDb4Db5Db6Db7Db8Db9DbaDc4DcaDd4Dd6Dd8Dd9DdaDe4De8De9DeaDf4Df5Df6Df7Df8Df9DfaCcccD03D0eD22D2dD50D6bD6eD80D8fDafDb1DbeDbfDdbDe0De3Df2DfeCfffD2cD3bD9dDa3Db3DbcDc1CeeeD0dD12D1cD2bD3dD42D43D4cD5cD5dD6cD72D73D7cD7dD83D92D93D9eDa1Da2DadDb2Dc3DccDceDd1Dd3DedC666D8bCdddD02D13D2eD2fD3eD40D41D4eD52D5eD62D6dD70D71D7fD81D8eD91Da0DaeDc0Dd2DdcDddDdeDdfDebCbbbD21D31D3fD61D6fDb0DeeDf1DfcC999DbbC888D0fD30D5bDabCaaaD10D11D1eD60De1C777DcbDf0"{
+	showMessage("1/3", "<html>"
+		+"<h1><font color=red>Image segmentation</h1><br>"
+		+"<font size=-2><font color=black> <br>"
+		+"<img src="+URL_Witcher+" height="+64+" width="+64+"><br>"
+		+"<font size=-2><font color=black> <br>"
+		+"<font color=red>Left click:<font color=black> Apply the choosen segmentation algorithm to delineate contourn <br>"
+		+"<font color=red>Right click:<font color=black> Open a dialog box to change parameters <br>"
+		);
+
+	showMessage("2/3", "<html>"
+		+"<h1><font color=red>Core segmentation</h1><br>"
+		+"<font size=-2><br>"
+		+"<img src="+URL_Core+" height="+64+" width="+64+"><br>"
+		+"<font size=-2><font color=black> <br>"
+		+"<font color=red>Left click:<font color=black> Apply the segmentation algorithm to delineate core contourn<br>"
+		+"<font color=red>Right click:<font color=black> Open a dialog box to choose one algorithm and change parameters <br>"
+		+"</b>"
+		+"<h2><font color=red>In Progress...</h2><br>"
+		);	
+
+	showMessage("3/3", "<html>"
+		+"<h1><font color=red>Vortex</h1><br>"
+		+"<font size=-2><font color=black> <br>"
+		+"<img src="+URL_Sk+" height="+64+" width="+64+"><br>"
+		+"<font size=-2><font color=black> <br>"
+		+"<font color=red>Left click:<font color=black> Skeletonize from a binary ROI (Requires having the ROI of the total area in the last position in the ROI manager)<br>"
+		+"<font color=red>Right click:<font color=black> Direct image processing via <b>Alternative Algorithm</b> <br>"
+		+"<font size=-2><br>"
+		+"<font color=black> Reduce binary total area to 1 pixel wide representations <br>"
+		+"It preserves the extent and connectivity of the original object<br>"
+		+"Useful for feature extraction and representing object's topology<br>"
+		+"You can dilate the skeleton with <b>Process > Binary > Dilate</b> for a better visualtion<br>"
+		+"</b>"
+		+"<h2><font color=red>In Progress...</h2><br>"
+		);	
+			
+}
+
+macro "HELP Action Tool Options" {
+	run('URL...', 'url='+URL);
+}
+
+// -----------------------------------------------------
+// Main segmentation tool
+// -----------------------------------------------------
+
+macro "Image segmentation Action Tool - Cff0D75D79D89D8aD95D99Dd6De5De6De7Df6C801D24D32D33D36D41D47D51D58D59D5eD6bD6eD81D8dD92D9eDa3DaeDb9DbaDc8Dc9Dd7Dd8CcccDc5Dc6Dc7Dd4Dd5De4De8Df4Df5Df7Df8C400D14D15D16D23D26D2cD2dD3cD4bD5aD61D67D69D6aD71D78D88D98Da6Da7DabDacDb5CeebD00D01D02D03D07D08D09D0aD0bD0cD0dD0eD0fD10D11D12D18D19D1aD1bD1eD1fD20D21D28D29D2aD2bD2fD30D38D39D3aD3fD40D4fD7fD8fD90Da0Db0Db1Db2Db7Db8DbfDc0Dc1Dc2Dc3Dc4DcaDcbDccDcdDceDcfDd0Dd1Dd2Dd3Dd9DdaDdbDdcDddDdeDdfDe0De1De2De3De9DeaDebDecDedDeeDefDf0Df1Df2Df3Df9DfaDfbDfcDfdDfeDffCb75D25D34D35D3dD42D43D44D45D46D4cD4dD52D53D54D5bD5cD5dD62D6cD6dD72D7bD7cD7dD82D8cD9bD9cC200D04D05D06D13D17D1cD1dD22D27D2eD31D37D3bD3eD48D49D4aD4eD50D5fD60D68D6fD70D7aD7eD80D8bD8eD91D9aD9dD9fDa1Da2Da8Da9DaaDadDafDb3Db4DbbDbcDbdDbeC202D55D56D63D64D65D66D73D74D76D77D83D84D85D86D87D93D94D96D97Da4Da5"{
+	Deselect_ROI();
+	name = getTitle();
+	run("Set Measurements...", "area perimeter shape redirect=None decimal=3");
+
+	if (Method_Choice0 == "Classic   ") {
+		Thresholding();
+		Create_selection();
+	}
+	
+	if (Method_Choice0 == "Alternative   ") {
+		Image_calculator();
+		Preprocessing();
+		Binarisation();
+		Postprocessing();
+		Create_selection();
+	}
+			
+	nROI_1 = roiManager("count")-1;
+	roiManager("Select", nROI_1);
+	roiManager("rename", name+"_Total_Area");
+	close();
+	setTool("freehand");
+	roiManager("Select", nROI_1);
+}
+
+macro "Image segmentation Action Tool Options" {
+	_choix = newArray("Classic   ","Alternative   ");
+	Dialog.create("Image segmentation Options");
+		Dialog.addRadioButtonGroup("Algorythm choice", _choix, 1, 2, Method_Choice0);
+		Dialog.addMessage("Unsharp Mask parameters");
+		Dialog.addNumber("Radius", unsharp_radius);
+		Dialog.addNumber("Weight", unsharp_weight);
+		Dialog.addMessage("Median filter");
+		Dialog.addNumber("Radius", med_filter_radius);
+		Dialog.addMessage("Particle Sift");
+		Dialog.addNumber("Min weight (px)", sift_weight);
+		Dialog.addCheckbox("Invert Selection", invert_selection);
+	Dialog.show();
+	Method_Choice0 = Dialog.getRadioButton();
+	unsharp_radius = Dialog.getNumber();
+	unsharp_weight = Dialog.getNumber();
+	med_filter_radius = Dialog.getNumber();
+	sift_weight = Dialog.getNumber();
+	invert_selection = Dialog.getCheckbox();
+}
+
+
+// -----------------------------------------------------
+// Core segmentation tool
+// -----------------------------------------------------
+
+macro "Core Area Action Tool - C000D16D17D18D25D29D35D39D56D57D58D65D69D76D77D78D96D97D98D99Da5Da7Da8Db6Db7Db9Dd5Dd6Dd7Dd8Dd9De5De7De9CfffD03D04D05D06D07D08D09D0aD0bD13D14D15D19D1aD1bD23D24D26D27D28D2aD2bD33D34D36D37D38D3aD3bD43D44D45D46D47D48D49D4aD4bD53D54D55D59D5aD5bD63D64D66D67D68D6aD6bD73D74D75D79D7aD7bD83D84D85D86D87D88D89D8aD8bD93D94D95D9aD9bDa3Da4Da6Da9DaaDabDb3Db4Db5Db8DbaDbbDc3Dc4Dc5Dc6Dc7Dc8Dc9DcaDcbDd3Dd4DdaDdbDe3De4De6De8DeaDebDf3Df4Df5Df6Df7Df8Df9DfaDfbC0aeD00D0eD11D1fD20D22D2dD3dD7eD82D8fD9eDaeDc0Dc2DcdDeeDf2DfdCeebD01D0cD0fD12D1cD1eD21D2cD30D3cD3eD41D42D4cD4eD4fD51D52D5cD5dD5eD60D61D6cD6eD72D7cD7dD7fD80D81D8cD90D92D9cD9dDa1Da2DacDafDb0Db2DbcDbeDccDd1DdcDddDdeDe1De2DecDfcDffCcccDf0Cbe1D02D10D1dD2eD31D4dD50D6dD6fD71D8eD91DadDbfDc1DdfDe0DedDf1C2b4D0dD2fD32D3fD40D5fD62D70D8dD9fDa0Db1DbdDceDcfDd0Dd2DefDfe"{
+	Deselect_ROI();
+	name = getTitle();
+	run("Duplicate...", "title=Process");
+	run("16-bit");
+	if (Method_Choice == "1     ") {
+		Image_calculator();
+		Preprocessing();
+		Core_Method1();
+	}
+	if (Method_Choice == "2     ") {
+		Core_Method2();
+	}
+	if (Method_Choice == "3     ") {
+		Core_Method3();
+	}
+}
+radio
+
+macro "Core Area Action Tool Options" {
+	_choix = newArray("1     ","2     ","3     ");
+	Dialog.create("Core Area parameters");
+	Dialog.addRadioButtonGroup("Algorythm choice", _choix, 1, 2, Method_Choice);
+	Dialog.addMessage("--------------------------------------");
+	Dialog.addMessage("Radius set up: ");
+	Dialog.addNumber("Minimum:", minimum_radius);
+	Dialog.addNumber("Maximum:", maximum_radius);
+	Dialog.addNumber("Median:", med_filter_radius2);
+	Dialog.addMessage("--------------------------------------");
+	Dialog.addNumber("Min weight (px):", sift_weight2);
+	Dialog.show();
+	Method_Choice = Dialog.getRadioButton();
+	minimum_radius = Dialog.getNumber(); 
+	maximum_radius = Dialog.getNumber();
+	med_filter_radius2 = Dialog.getNumber(); 
+	sift_weight2 = Dialog.getNumber(); 
+}
+
+
+// -----------------------------------------------------
+// Skeleton tools
+// -----------------------------------------------------
+
+macro "Skeletonize Action Tool - C000D13D15D18D1aD1cD23D25D28D2aD2cD33D35D38D3aD3cD43D45D48D4aD4cD53D55D58D59D5aD5bD5cD63D64D65D68D75D76D77D78D87D96D97D98D99Da4Da5Da6Da9Db4Db6Db9DbaDbbDc4Dc6Dc9DcbDd4Dd6Dd9DdbDe4De6De9DebC000C111C222C333C444C555C666C777C888C999CaaaCbbbCcccCdddCeeeCfffD00D01D02D03D04D05D06D07D08D09D0aD0bD0cD0dD0eD0fD10D11D12D14D16D17D19D1bD1dD1eD1fD20D21D22D24D26D27D29D2bD2dD2eD2fD30D31D32D34D36D37D39D3bD3dD3eD3fD40D41D42D44D46D47D49D4bD4dD4eD4fD50D51D52D54D56D57D5dD5eD5fD60D61D62D66D67D69D6aD6bD6cD6dD6eD6fD70D71D72D73D74D79D7aD7bD7cD7dD7eD7fD80D81D82D83D84D85D86D88D89D8aD8bD8cD8dD8eD8fD90D91D92D93D94D95D9aD9bD9cD9dD9eD9fDa0Da1Da2Da3Da7Da8DaaDabDacDadDaeDafDb0Db1Db2Db3Db5Db7Db8DbcDbdDbeDbfDc0Dc1Dc2Dc3Dc5Dc7Dc8DcaDccDcdDceDcfDd0Dd1Dd2Dd3Dd5Dd7Dd8DdaDdcDddDdeDdfDe0De1De2De3De5De7De8DeaDecDedDeeDefDf0Df1Df2Df3Df4Df5Df6Df7Df8Df9DfaDfbDfcDfdDfeDff"{
+	run("Set Measurements...", "area perimeter shape redirect=None decimal=3");
+	getDimensions(width, height, channels, slices, frames);
+	newImage("Skeleton_of_"+name, "8-bit white", width, height, 1);
+	Skeletonization();
+	
+}
+
+macro "Skeletonize Action Tool Options"{
+	Deselect_ROI();
+	name = getTitle();
+	run("Set Measurements...", "area perimeter shape redirect=None decimal=3");
+	Image_calculator();
+	Preprocessing();
+	Binarisation();
+	Postprocessing();
+	run("Skeletonize");
+	Create_selection();
+	nROI_2 = roiManager("count")-1;
+	roiManager("Select", nROI_2);
+	roiManager("rename", name+"_Skeleton");
+	rename("Skeleton_of_"+name);
+}
+
+
+// ______________________________________________________________________________________________________________________
+// ----------------------------------------------------------------------------------------------------------------------
+// Functions
+// ______________________________________________________________________________________________________________________
+// ----------------------------------------------------------------------------------------------------------------------
+
+function Deselect_ROI(){
+	roiManager("deselect");
+	roiManager("Show All");
+	roiManager("Show None");
+}
+
+
+function Image_calculator(){
+	// Duplicate
+	run("Duplicate...", "title=ORI");
+	selectWindow("ORI");
+	// Convolved image
+	run("Duplicate...", "title=CONV");
+	run("Convolve...", "text1=[1 1 1\n1 1 1 \n1 1 1\n] normalize");
+	// Sharped image
+	selectWindow("ORI");
+	run("Duplicate...", "title=SHARP");
+	run("Unsharp Mask...", "radius="+unsharp_radius+" mask="+unsharp_weight+"");
+	// Image calculator: CONV = CONV - SHARP
+	imageCalculator("Subtract create 32-bit", "CONV","SHARP");
+	selectWindow("CONV");
+	close();
+	selectWindow("SHARP");
+	close();
+	selectWindow("ORI");
+	close();
+	selectWindow("Result of CONV");
+	rename("CONV-SHARP");
+}
+
+
+function Preprocessing(){
+	selectWindow("CONV-SHARP");
+	// Lissage - reduction du bruit de fond (simple convolution en général)
+	// Différenciation - calcul des dérivées pour mettre en évidence le contour
+	run("Find Edges");
+	run("Invert");
+}
+
+
+function Binarisation(){
+	selectWindow("CONV-SHARP");
+	setAutoThreshold("Triangle");
+	run("Convert to Mask");
+	run("Close-");
+	run("Fill Holes");
+	run("Dilate");
+	run("Median...", "radius="+med_filter_radius+"");
+	run("Erode");
+}
+
+
+function Postprocessing(){
+	// Elimination of small particles and on edge
+	run("Analyze Particles...", "size="+sift_weight+"-Infinity pixel show=Masks exclude in_situ");
+}
+
+
+function Create_selection(){
+	// Add to ROI manager
+	run("Create Selection");
+	if (invert_selection == true) run("Make Inverse");
+	roiManager("Add");
+}
+
+
+function Skeletonization(){
+	nROI_1 = roiManager("count")-1;
+	roiManager("Select", nROI_1);
+	roiManager("Fill");
+	run("Convert to Mask");
+	// Line formation
+	run("Skeletonize");
+	Create_selection();
+	nROI_2 = roiManager("count")-1;
+	roiManager("Select", nROI_2);
+	roiManager("rename", name+"_Skeleton");
+}
+
+
+function Core_Method1(){
+	run("Invert");
+	run("Median...", "radius=5");
+	setAutoThreshold("Minimum dark no-reset");
+	run("Convert to Mask");
+	run("Close-");
+	run("Invert");
+	
+	run("Analyze Particles...", "size=50000-1000000 pixel show=Masks in_situ");
+	run("Median...", "radius="+med_filter_radius2);
+	run("Create Selection");
+	run("Fit Ellipse");
+	roiManager("Add");
+	nROI = roiManager("count")-1;
+	roiManager("Select", nROI);
+	roiManager("Rename", name+"_Core");
+	close();
+	close();
+	roiManager("Select", nROI);
+}
+
+function Core_Method2(){
+	run("Maximum...", "radius="+maximum_radius);
+	run("Minimum...", "radius="+minimum_radius);
+	run("Median...", "radius="+med_filter_radius2);
+	run("Subtract Background...", "rolling=25 light create");
+	run("Median...", "radius="+med_filter_radius2);
+	run("Convert to Mask");
+	run("Analyze Particles...", "size="+sift_weight2+"-Infinity pixel circularity=0.4-1.00 show=Masks exclude in_situ");
+	run("Fill Holes");
+	run("Create Selection");
+	roiManager("Add");
+	nROI = roiManager("count")-1;
+	roiManager("Select", nROI);
+	roiManager("Rename", name+"_Core");
+	close();
+	roiManager("Select", nROI);
+}
+
+function Core_Method3(){
+	run("Convolve...", "text1=[1 1 1\n1 1 1\n1 1 1\n] normalize");
+	run("Median...", "radius="+med_filter_radius2);
+	run("Subtract Background...", "rolling=25 light create");
+	run("Maximum...", "radius="+maximum_radius);
+	setAutoThreshold("MinError no-reset"); //Otsu
+	setOption("BlackBackground", true);
+	run("Convert to Mask");
+	run("Median...", "radius="+med_filter_radius2);
+	run("Analyze Particles...", "size="+sift_weight2+"-Infinity pixel circularity=0.40-1.00 show=Masks exclude in_situ");
+	run("Fill Holes");
+	run("Create Selection");
+	roiManager("Add");
+	nROI = roiManager("count")-1;
+	roiManager("Select", nROI);
+	roiManager("Rename", name+"_Core");
+	close();
+	roiManager("Select", nROI);
+}
+
+function TableFormat(){ 
+	Table.deleteRows(0, 1);
+	Plot.create("Plot of Results", "x", "Mean");
+	Plot.add("Connected Circles", Table.getColumn("Mean", "Results"));
+	Plot.setStyle(0, "blue,#a0a0ff,2.0,Connected Circles");
+	Plot.setLimits(0.0,50.0,0,60000);
+}
+
+function Thresholding(){ 
+	run("Duplicate...", " ");
+	run("8-bit");
+	run("Subtract Background...", "rolling=20");
+	run("Find Edges");
+	setAutoThreshold("Otsu dark");
+	setOption("BlackBackground", true);
+	run("Convert to Mask");
+	run("Close-");
+	run("Fill Holes");
+	run("Median...", "radius="+med_filter_radius);
+	run("Analyze Particles...", "size="+sift_weight+"-Infinity pixel show=Masks exclude in_situ");
+}
