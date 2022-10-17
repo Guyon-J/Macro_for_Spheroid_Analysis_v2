@@ -5,7 +5,7 @@ Have a look at the project's [Cancer Feature Analysis](https://github.com/Guyon-
 
 
 ## Installation instructions
-In [Fiji](https://fiji.sc/) window, open Plugins > Macros > Startup Macros... and copy and past the code >> __[here](https://raw.githubusercontent.com/Guyon-J/Macro_for_Spheroid_Analysis_v2/main/Macro_Image_Segmentation?token=GHSAT0AAAAAABZ6IWOX5SRPW5S5RUQDKTVKY2JPJXA)__ <<. 
+In [Fiji](https://fiji.sc/) window, open Plugins > Macros > Startup Macros... and copy and past the code >> __[here](https://raw.githubusercontent.com/Guyon-J/Macro_for_Spheroid_Analysis_v2/main/Macro_Image_Segmentation)__ <<. 
 Change the language into IJ1 Macro and save as .ijm file in the Fiji.app folder > macros > toolsets.
 
 Select the tool in the "More Tools" menu (**>>**)
